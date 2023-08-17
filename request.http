@@ -1,0 +1,1 @@
+get https://zenquotes.io/api/quotes/[your_key]
