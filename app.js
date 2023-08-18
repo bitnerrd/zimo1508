@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const expressLayouts = require("express-ejs-layouts");
-
+const cors = require("cors");
+app.use(cors());
 //connection to database
 const db = require("./auth/keys").mongoURI;
 mongoose.set("strictQuery", false);
@@ -47,7 +48,7 @@ app.use(function (req, res, next) {
 
 // routes
 app.use("/user", require("./routes/users"));
-app.use("/admin", require("./routes/index"));
+app.use("/", require("./routes/index"));
 
 const port = process.env.PORT;
 app.listen(port, console.log(`Server is up on ${port}`));

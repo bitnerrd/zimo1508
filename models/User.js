@@ -15,9 +15,13 @@ const UserSchema = new mongoose.Schema(
       required: [true, "Phone Number Required"],
       maxLength: 11,
     },
-    studentStatus: {
+    status: {
       type: Boolean,
-      required: true,
+      default: true,
+    },
+    country: {
+      type: String,
+      required: [true, "Country Required"],
     },
     password: {
       type: String,
@@ -30,11 +34,11 @@ const UserSchema = new mongoose.Schema(
     },
     verified: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 

@@ -5,22 +5,16 @@ const otpGenerator = require("otp-generator");
 const User = require("../models/User");
 const transporter = require("../auth/nodemailer");
 const { verifyEmail } = require("../controllers/verification");
+const _login = require("../controllers/login");
 
 // @dec- user registration
 router.post("/register", async (req, res) => {
-  const { name, email, phone, studentStatus, password, confirmPassword } =
+  const { name, email, phone, status, country, password, confirmPassword } =
     req.body;
   // error message array
   let errorMessages = [];
   // form validations
-  if (
-    !name ||
-    !email ||
-    !phone ||
-    !studentStatus ||
-    !password ||
-    !confirmPassword
-  ) {
+  if (!name || !email || !phone || !password || !confirmPassword) {
     errorMessages.push("Fill in all fields");
     res.status(400).send(errorMessages);
   } else if (password.length < 6) {
@@ -49,13 +43,14 @@ router.post("/register", async (req, res) => {
 
         // User to Schema
         const newUser = User({
-          name: name,
-          email: email,
-          phone: phone,
-          studentStatus: studentStatus,
+          name,
+          email,
+          phone,
+          status,
+          country,
           password: hash,
-          otp: otp,
-          verified: false,
+          otp,
+          verified: true,
         });
 
         // Sending OTP
@@ -70,12 +65,13 @@ router.post("/register", async (req, res) => {
 
         const savedUser = await newUser.save();
         if (savedUser) {
-          const responce = await transporter.sendMail(mailoptions);
-          if (responce.accepted) {
-            res.send(`OTP ${otp} has been delivered to ${newUser.email}`);
-          } else {
-            res.send("OTP Genration Failed.");
-          }
+          // const responce = await transporter.sendMail(mailoptions);
+          // if (responce.accepted) {
+          //   res.send(`OTP ${otp} has been delivered to ${newUser.email}`);
+          // } else {
+          //   res.send("OTP Genration Failed.");
+          // }
+          res.send(`User Saved and OTP is not delivered`);
         } else {
           res.send(`Error occur while registering user, Try Again!`);
         }
@@ -88,5 +84,7 @@ router.post("/register", async (req, res) => {
 });
 // @dec- user Email Verification
 router.post("/verify", verifyEmail);
+
+router.post("/login", _login);
 
 module.exports = router;
