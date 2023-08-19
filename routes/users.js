@@ -40,6 +40,9 @@ router.post("/register", async (req, res) => {
         // Hash Password
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
+        let date = new Date();
+        const createdAt = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+        console.log(createdAt);
 
         // User to Schema
         const newUser = User({
@@ -51,6 +54,7 @@ router.post("/register", async (req, res) => {
           password: hash,
           otp,
           verified: true,
+          createdAt: createdAt,
         });
 
         // Sending OTP
